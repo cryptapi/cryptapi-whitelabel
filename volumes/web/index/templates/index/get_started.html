@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row" style="margin-bottom: 3rem">
+        <div class="col s12 no-padding">
+            <div class="card grey lighten-4">
+                <div class="card-content">
+                    <div class="row break-lines">
+                        <div class="col s12 m12 l10 offset-l1 no-padding">
+                            <div class="row" id="get_started">
+                                <div class="col s12">
+                                    <h2 class="thin">Getting Started</h2>
+                                </div>
+                                <div class="col s12">
+                                    <h5 class="light">
+                                        If you're a developer or you want to integrate our service with your code, just follow this guide
+                                    </h5>
+                                </div>
+                                <div class="col s12">
+                                    <h5>BTC:</h5>
+                                    <pre class="grey lighten-3" style="padding: 5px 10px; border-radius: 3px">{{ request.settings.site_url }}.io/api/btc/create/?address=1PE5U4temq1rFzseHHGE2L8smwHCyRbkx3&callback=http://example.com/callback?invoice=1234</pre>
+                                    <hr/>
+                                    <br/>
+                                    <h5>BCH:</h5>
+                                    <pre class="grey lighten-3" style="padding: 5px 10px; border-radius: 3px">{{ request.settings.site_url }}/api/bch/create/?address=bitcoincash:qrz6pkvsaxmy6aypy8sdvg5l3pac8zg3qvtqdaarwq&callback=http://example.com/callback?invoice=1234</pre>
+                                    <hr/>
+                                    <br/>
+                                    <h5>LTC:</h5>
+                                    <pre class="grey lighten-3" style="padding: 5px 10px; border-radius: 3px">{{ request.settings.site_url }}/api/ltc/create/?address=LLGrzcbppKCii4377sMpRiiBeNP8QjWnqt&callback=http://example.com/callback?invoice=1234</pre>
+                                    <hr/>
+                                    <br/>
+                                    <h5>ETH:</h5>
+                                    <pre class="grey lighten-3" style="padding: 5px 10px; border-radius: 3px">{{ request.settings.site_url }}/api/eth/create/?address=0x76e81bf0d554c1c9237cc143905079c6a4a5bf26&callback=http://example.com/callback?invoice=1234</pre>
+                                    <hr/>
+                                    <br/>
+                                    <h5>XMR:</h5>
+                                    <pre class="grey lighten-3" style="padding: 5px 10px; border-radius: 3px">{{ request.settings.site_url }}/api/xmr/create/?address=84wnBPZxhSrHFRnrHnBsnti5jZkWcXJRrYJWJ4A61xEQfJF4H8VL9RZGcvSrQKumMNFHgEqHiJvMHWkx67w64Q2sQRmkxE7&callback=http://example.com/callback?invoice=1234</pre>
+                                    <hr/>
+                                    <br/>
+                                    <h5>IOTA:</h5>
+                                    <pre class="grey lighten-3" style="padding: 5px 10px; border-radius: 3px">{{ request.settings.site_url }}/api/iota/create/?address=GCSTVSRTLLPBEXZNGWTDHCGPNVARNSRXFPWGAWTQBSZLIMELSZPWKKTKXHKBXIUDNGQFHVYAZMHG9NXNDRXPRLL9ZA&callback=http://example.com/callback?invoice=1234</pre>
+                                    <hr/>
+                                </div>
+                            </div>
+                            <div class="row" id="step_by_step">
+                                <div class="col s12">
+                                    <h2 class="thin">Still not sure how it all works?</h2>
+                                    <h4 class="thin">Here is a handy step-by-step guide:</h4>
+                                </div>
+                                <div class="col s12 left-align">
+                                    <ol class="collection">
+                                        <li class="collection-item"
+                                            style="list-style-type:decimal">
+                                            <h6 class="light">You request a new payment address from our API, with your
+                                                crypto address and callback URL (e.g
+                                                http://example.com/callback?invoice=1234)</h6>
+                                        </li>
+                                        <li class="collection-item"
+                                            style="list-style-type:decimal">
+                                            <h6 class="light">You present your customer with the payment address generated
+                                                by our system</h6>
+                                        </li>
+                                        <li class="collection-item"
+                                            style="list-style-type:decimal">
+                                            <h6 class="light">Your customer sends the amount to the payment address our
+                                                system generated</h6>
+                                        </li>
+                                        <li class="collection-item"
+                                            style="list-style-type:decimal">
+                                            <h6 class="light">Upon confirmation<sup>[1]</sup> our system forwards the
+                                                payment to the address you provided when you request the address and
+                                                notifies your system via the callback URL you provided with the payment
+                                                details (value, TXID in, TXID out, etc)</h6>
+                                        </li>
+                                        <li class="collection-item"
+                                            style="list-style-type:decimal">
+                                            <h6 class="light">Your system confirms the payment value and grants access to
+                                                the user</h6>
+                                        </li>
+                                    </ol>
+                                </div>
+                                <div class="col s12" id="practical_scenario">
+                                    <h2 class="thin">Practical Scenario:</h2>
+                                </div>
+                                <div class="col s12 left-align">
+                                    <div class="light" style="font-size: larger">
+                                        Let's say you want to be paid in Bitcoin, and that:
+                                        <ul class="collection">
+                                            <li class="collection-item">Your BTC address is
+                                                <span class="grey lighten-3 quote">1PE5U4temq1rFzseHHGE2L8smwHCyRbkx3</span>
+                                            </li>
+                                            <li class="collection-item">Your service's
+                                                callback URL is <span class="grey lighten-3 quote">http://myservice.com/payment/callback/</span>
+                                            </li>
+                                        </ul>
+                                        <br/>
+
+                                        <span class="grey lighten-3 quote">User A</span> arrives at your website and places
+                                        <span class="grey lighten-3 quote">Order #1234</span>, with the total of <span
+                                            class="grey lighten-3 quote">0.001 BTC</span><br/><br/>
+
+                                        So, you make a request to our BTC API like so: <br/><br/>
+
+                                        <span class="grey lighten-3 quote">{{ request.settings.site_url }}/api/btc/create/?address=1PE5U4temq1rFzseHHGE2L8smwHCyRbkx3&callback=http://myservice.com/payment/callback/?invoice=1234&nonce=randomstring</span>
+                                        <br/><br/>
+
+                                        This will generate a new payment bitcoin address, and will return a JSON, like this:
+                                        <pre class="grey lighten-3 quote">{
+    "status": "success",
+    "callback_url": "http://myservice.com/payment/callback/?invoice=1234&nonce=randomstring",
+    "address_in": "1SKNHcxFc1bFccqPd5g3En4j2WCVX3Dqc",
+    "address_out": "1PE5U4temq1rFzseHHGE2L8smwHCyRbkx3"
+}</pre>
+                                        <br/>
+                                        Where the <span class="grey lighten-3 quote">address_in</span> is the new generated
+                                        address,
+                                        the <span class="grey lighten-3 quote">address_out</span> is the BTC address you
+                                        provided (where the funds will be sent to)
+                                        and <span class="grey lighten-3 quote">callback_url</span> is the URL you provided,
+                                        where the payment confirmation will be sent to. <br/><br/>
+
+                                        You save this data on your side and present the <span class="grey lighten-3 quote">address_in</span>
+                                        to your customer, along with the value of invoice (in this case <span
+                                            class="grey lighten-3 quote">0.001 BTC</span>) <br/>
+                                        Your customer sends the 0.001 BTC to that address and whenever the payment is
+                                        confirmed (has 1 confirmations)<sup>[1]</sup>, our system forwards the payment to
+                                        the BTC address you provided (<span class="grey lighten-3 quote">address_out</span>).
+                                        After this, our system will make a <span class="grey lighten-3 quote">GET</span>
+                                        request to the callback URL you provided, with the payment details. <br/><br/>
+
+                                        In this example, the callback request would look something like the following: <br/>
+                                        <span class="grey lighten-3 quote">http://myservice.com/payment/callback/?invoice=1234&nonce=randomstring&value=100000&address_in=1SKNHcxFc1bFccqPd5g3En4j2WCVX3Dqc&address_out=1PE5U4temq1rFzseHHGE2L8smwHCyRbkx3&txid_in=33f11611f863d7475eb10daada2f225f0877561cf58cdfff175e99635dfd9120&txid_out=5ea53d5e728bfdb56b54c0b945990b69ae1e66cec56ab24679c9a622c4695276&confirmations=1&coin=btc</span><br/><br/>
+
+                                        Upon receiving this request, you can validate the invoice, check if the value
+                                        matches and save the transaction IDs (TXID). <br/><br/>
+
+                                        <b>It's also very much recomended for you to provice a nonce, which is a random
+                                            string you generate, that you validate when you receive our request, to make
+                                            sure the request is coming from us.</b><br/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s12 thin" style="font-size: larger; margin-top: 2rem;">
+                                    [1] in case you append the <span class="grey lighten-3 quote">pending=1</span>
+                                    parameter to the address request, you will be notified twice, once when the
+                                    transaction is first seen on the network, and another when confirmed.
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s12 center" style="margin-top: 3rem;">
+                                    <h4 class="thin">Read the full documentation and try it <a
+                                            href="{% url 'index:docs' %}">here</a>.</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

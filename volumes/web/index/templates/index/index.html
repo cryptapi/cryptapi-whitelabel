@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header %}
+    <style>
+        li.collection-item {
+            min-height: 90px !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="row break-lines">
+        <div class="col s12 no-padding">
+            <div class="card main valign-wrapper">
+                <div class="card-content" style="width: 100%">
+                    <div class="row">
+                        <div class="col s12 center">
+                            <h1 class="thin huge hide-on-small-and-down">
+                                {{ request.settings.site_title }}
+                            </h1>
+                            <h3 class="thin no-margin">
+                                Your easy to use, secure and privacy oriented payment gateway
+                            </h3>
+                        </div>
+                        <div class="col s12 center">
+                            <h5 class="light">Accept cryptocurrency on your website and get paid instantly, just with your crypto address</h5>
+                        </div>
+                        <div class="col s12 center">
+                            <a class="btn btn-large light-blue darken-1 get-started-btn"
+                               href="{% url 'index:get_started' %}"
+                            >
+                                Get Started
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 no-padding">
+            <div class="card grey lighten-4">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12 m12 l8 offset-l2 center">
+                            <h5 class="light">
+                                Forget all about lengthy sign-ups, applying for merchant accounts and being restricted
+                                to one cryptocurrency.
+                            </h5>
+                            <br/>
+                            <h5 class="light">
+                                With {{ request.settings.site_title }} you can give more choices to your customers, by accepting payments in
+                                multiple cryptocurrencies, including Bitcoin, Bitcoin Cash, Litecoin,
+                                Ethereum, Monero and IOTA (more coming soon), hassle-free.
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 no-padding">
+            <div class="card grey lighten-4">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12 m12 l8 offset-l2 center">
+                            <h2 class="thin">
+                                Features:
+                            </h2>
+                            <div class="row">
+                                <div class="col s12 m6 no-padding">
+                                    <ul class="collection">
+                                        <li class="collection-item avatar valign-wrapper">
+                                            <i class="material-icons circle grey-text text-darken-4">attach_money</i>
+                                            <div style="margin: auto;">
+                                                <span class="title x-thick">Multi-currency Integration</span>
+                                                <p class="light">
+                                                    Accept payments in multiple cryptocurrencies without extra code
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li class="collection-item avatar valign-wrapper">
+                                            <i class="material-icons circle grey-text text-darken-4">trending_down</i>
+                                            <div style="margin: auto;">
+                                                <span class="title x-thick">Lowest Fees & No Hidden Costs</span>
+                                                <p class="light">
+                                                    Our service only takes 1% fee on your customers' payments
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li class="collection-item avatar valign-wrapper">
+                                            <i class="material-icons circle grey-text text-darken-4">security</i>
+                                            <div style="margin: auto;">
+                                                <span class="title x-thick">Secure</span>
+                                                <p class="light">
+                                                    Secure SSL/TLS requests and hot/cold wallet setup to keep your funds
+                                                    secure
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li class="collection-item avatar valign-wrapper">
+                                            <i class="material-icons circle grey-text text-darken-4">timer</i>
+                                            <div style="margin: auto;">
+                                                <span class="title x-thick">Fast Payment Confirmations</span>
+                                                <p class="light">
+                                                    Our system is designed to provide the fastest payment confirmations
+                                                </p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col s12 m6 no-padding">
+                                    <ul class="collection">
+                                        <li class="collection-item avatar valign-wrapper">
+                                            <i class="material-icons circle grey-text text-darken-4">do_not_disturb_alt</i>
+                                            <div style="margin: auto;">
+                                                <span class="title x-thick">No Registrations</span>
+                                                <p class="light">
+                                                    No registrations, applications or API keys
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li class="collection-item avatar valign-wrapper">
+                                            <i class="material-icons circle grey-text text-darken-4">new_releases</i>
+                                            <div style="margin: auto;">
+                                                <span class="title x-thick">Easy Integration</span>
+                                                <p class="light">
+                                                    Generate a new payment address with literally 1 line of code
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li class="collection-item avatar valign-wrapper">
+                                            <i class="material-icons circle grey-text text-darken-4">compare_arrows</i>
+                                            <div style="margin: auto;">
+                                                <span class="title x-thick">No Polling Required</span>
+                                                <p class="light">
+                                                    Our system will notify your callback when the payment is confirmed
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li class="collection-item avatar valign-wrapper">
+                                            <i class="material-icons circle grey-text text-darken-4">account_circle</i>
+                                            <div style="margin: auto;">
+                                                <span class="title x-thick">Privacy Oriented</span>
+                                                <p class="light">
+                                                    No personal details required to start getting paid
+                                                </p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 no-padding">
+            <div class="card grey lighten-4">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s12 m12 l10 offset-l1 center">
+                            <h2 class="thin">
+                                Why use {{ request.settings.site_title }}?
+                            </h2>
+                            <div class="row">
+                                <div class="col s12 m10 l8 offset-m1 offset-l2 no-padding">
+                                    <ul class="collection">
+                                        <li class="collection-item avatar valign-wrapper">
+                                            <i class="material-icons circle grey-text text-darken-4">check</i>
+                                            <div style="margin: auto;">
+                                                <span class="title x-thick">Keep Your Funds Secure</span>
+                                                <p class="light">
+                                                    Receive your payments directly to offline / cold wallets
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li class="collection-item avatar valign-wrapper">
+                                            <i class="material-icons circle grey-text text-darken-4">check</i>
+                                            <div style="margin: auto;">
+                                                <span class="title x-thick">Give Your Customers More Choices</span>
+                                                <p class="light">
+                                                    Accept payments in multiple currencies without extra integrations
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li class="collection-item avatar valign-wrapper">
+                                            <i class="material-icons circle grey-text text-darken-4">check</i>
+                                            <div style="margin: auto;">
+                                                <span class="title x-thick">Don't Be Surprised With High Fees</span>
+                                                <p class="light">
+                                                    No hidden costs or hard-to-understand fees, our fee formula for each
+                                                    coin is shown <a href="{% url 'index:get_started' %}#fees">here</a>
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li class="collection-item avatar valign-wrapper">
+                                            <i class="material-icons circle grey-text text-darken-4">check</i>
+                                            <div style="margin: auto;">
+                                                <span class="title x-thick">Forget the Cronjobs</span>
+                                                <p class="light">
+                                                    You don't need to poll our service to check if the user paid, our
+                                                    service will notify you!
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li class="collection-item avatar valign-wrapper">
+                                            <i class="material-icons circle grey-text text-darken-4">check</i>
+                                            <div style="margin: auto;">
+                                                <span class="title x-thick">Dedicated Infrastructure</span>
+                                                <p class="light">
+                                                    We have a dedicated and vertically integrated infrastructure,
+                                                    to make sure your payments are never lost and we can help you with
+                                                    any issues that may arise.
+                                                </p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

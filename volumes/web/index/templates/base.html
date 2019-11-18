@@ -1,0 +1,99 @@
+{% load static extras %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{{ request.settings.site_title }} - {{ page_description }}</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'images/favicon/apple-icon-57x57.png' %}">
+    <link rel="apple-touch-icon" sizes="60x60" href="{% static 'images/favicon/apple-icon-60x60.png' %}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'images/favicon/apple-icon-72x72.png' %}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{% static 'images/favicon/apple-icon-76x76.png' %}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'images/favicon/apple-icon-114x114.png' %}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'images/favicon/apple-icon-120x120.png' %}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{% static 'images/favicon/apple-icon-144x144.png' %}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'images/favicon/apple-icon-152x152.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/favicon/apple-icon-180x180.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'images/favicon/android-icon-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{% static 'images/favicon/favicon-96x96.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon/favicon-16x16.png' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/materialize.min.css' %}" media="screen,projection"/>
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,700" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="{% static 'css/style.css' %}" media="screen,projection"/>
+    <script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.webticker.min.js' %}"></script>
+    <meta name="Description" content="{% if seo_description %}{{ seo_description }}{% else %}Cryptocurrency payment gateway, with support for Bitcoin, Bitcoin Cash, Litecoin, Ethereum, Monero and IOTA, with more coins coming soon. No sign-ups, API keys or difficult integrations, receive payments with as little as one line of code!{% endif %}">
+    <meta name="Keywords" content="crypto, cryptopayments, bitcoin, bitcoin cash, litecoin, ethereum, monero, iota, blockchain, payments, payment gateway, payment processor">
+
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% if seo_image %}{{ MEDIA_URL }}{{ seo_image }}{% else %}{% static 'images/white_label_logo_alt.png' %}{% endif %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="{% if seo_article %}article{% else %}website{% endif %}">
+    <meta property="og:title" content="{{ request.settings.site_title }} - {{ site_description }}">
+    <meta property="og:description" content="{% if seo_description %}{{ seo_description }}{% else %}Cryptocurrency payment gateway, with support for Bitcoin, Bitcoin Cash, Litecoin, Ethereum, Monero and IOTA, with more coins coming soon. No sign-ups, API keys or difficult integrations, receive payments with as little as one line of code!{% endif %}">
+
+    {% block header %}
+    {% endblock %}
+</head>
+<body class="grey lighten-4 grey-text text-darken-3">
+
+<div class="navbar-fixed">
+    <nav class="grey lighten-3">
+        <div class="nav-wrapper">
+            <a href="{% url 'index:index' %}" class="brand-logo thin">
+                <img class="ca-logo" src="{% static 'images/white_label_logo.png' %}" />
+            </a>
+            <a href="#" data-target="navmob" class="sidenav-trigger">
+                <i class="material-icons">menu</i>
+            </a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="{% url 'index:get_started' %}" class="grey-text text-darken-4 waves-effect waves-light">Get Started</a></li>
+                <li><a href="{% url 'index:pricing' %}" class="grey-text text-darken-4 waves-effect waves-light">Pricing / Fees</a></li>
+                <li><a href="{% url 'index:docs' %}" class="grey-text text-darken-4 waves-effect waves-light">API Documentation</a></li>
+            </ul>
+            <ul class="sidenav grey lighten-2" id="navmob" style="padding-top: 1rem">
+                <li><a href="{% url 'index:get_started' %}" class="grey-text text-darken-4 waves-effect waves-light">Get Started</a></li>
+                <li><a href="{% url 'index:pricing' %}" class="grey-text text-darken-4 waves-effect waves-light">Pricing / Fees</a></li>
+                <li><a href="{% url 'index:docs' %}" class="grey-text text-darken-4 waves-effect waves-light">API Documentation</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+{% if messages %}
+    {% for m in messages %}
+        <div class="status-bar col s12 no-padding">
+            <div class="card-panel hoverable {{ m.level_tag|status_colors }}" style="text-align: center; padding: 15px; margin: 0;">
+                {{ m|safe }}
+                {% if m.level_tag != 'error' %}
+                    <button class="btn btn-flat transparent right {{ m.level_tag|text_colors }}"><i class="material-icons">clear</i></button>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% block content %}
+{% endblock %}
+
+<div class="row">
+    <div class="col s12 m4 l3 offset-m1 offset-l2" style="padding: 0.5rem 1.5rem">
+        <div>&copy; {% now 'Y' %} {{ request.settings.site_title }}</div>
+    </div>
+    <div class="col s12 m2 l2 center-align"></div>
+    <div class="col s12 m4 l3 right-align social" style="padding-right: 2rem"></div>
+</div>
+
+<script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/script.js' %}"></script>
+
+{% block footer %}
+{% endblock %}
+
+</body>
+</html>

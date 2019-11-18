@@ -1,0 +1,1643 @@
+{% load extras %}
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "{{ request.settings.site_title }} is a Bitcoin, Bitcoin Cash, Litecoin, Ethereum, Monero and IOTA payment API.<br/>It is designed with the intent to allow you to integrate multiple coin payments in your service with the least effort possible.<br/>There are no sign-ups, lengthy implementations or API keys required, it is as easy as a simple CURL request to create a new payment address.<br/><br/>The only thing required is that you implement the logic on your server to handle the callbacks sent to your server when the transaction from the client is confirmed.",
+    "version": "v1.6.1",
+    "title": "{{ request.settings.site_title }} - Payment API Documentation",
+    "contact": {
+      "email": "{{ request.settings.contact_email }}"
+    }
+  },
+  "servers": [
+    {
+      "url": "{{ request.settings.site_url }}/api"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Bitcoin",
+      "description": "API endpoint to receive payments in Bitcoin"
+    },
+    {
+      "name": "Bitcoin Cash",
+      "description": "API endpoint to receive payments in Bitcoin Cash"
+    },
+    {
+      "name": "Litecoin",
+      "description": "API endpoint to receive payments in Litecoin"
+    },
+    {
+      "name": "Ethereum",
+      "description": "API endpoint to receive payments in Ethereum"
+    },
+    {
+      "name": "Monero",
+      "description": "API endpoint to receive payments in Monero"
+    },
+    {
+      "name": "IOTA",
+      "description": "API endpoint to receive payments in IOTA"
+    },
+  ],
+  "paths": {
+    "/btc/create": {
+      "get": {
+        "tags": [
+          "Bitcoin"
+        ],
+        "summary": "Create a new BTC address to receive payments",
+        "description": "This method is used to generate a new Bitcoin address to give your clients, where they can send payments.<br/>This service has a minimum amount of **{{ btc.min_tx }} BTC**, any values below that will be ignored.<br/>Fee is calculated as follows: &emsp;``max({{ btc.min_fee }}, {{ btc.fee|divide:100 }} * amount)``<br/>Which means that the fee is {{ btc.fee }}% or {{ btc.min_fee }} BTC, whichever is greater",
+        "operationId": "btccreate",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "callback",
+            "description": "The URL the callbacks will be sent to. Must be a valid URL",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "address",
+            "description": "Address or addresses where the payment will be forwarded to.<br/> In case of multiple addresses, it should be in the following format: `<percentage_1>@<address_1>|<percentage_2>@<address_2>` and so on. <br/>Percentages are set from 0.1 to 1.0 and must add up to 1.00 (100%).<br/> Addresses must be valid.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pending",
+            "description": "Set this to 1 if you want to be notified of pending transactions (before they're confirmed)",
+            "required": false,
+            "schema": {
+              "type": "int"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Address was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/create_btc"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error creating address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        },
+        "callbacks": {
+          "Confirmed": {
+            "Confirmed Callback": {
+              "get": {
+                "$ref": "#/components/schemas/confirmed_callback",
+              }
+            }
+          },
+          "Pending": {
+            "Pending Callback": {
+              "get": {
+                "$ref": "#/components/schemas/pending_callback",
+              }
+            }
+          }
+        }
+      }
+    },
+    "/btc/logs/": {
+      "get": {
+        "tags": [
+          "Bitcoin"
+        ],
+        "summary": "Check the callback logs for a certain callback URL",
+        "description": "This method is used to check logs for your callback URLs",
+        "operationId": "btclogs",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "callback",
+            "description": "The URL of the callback",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of payments sent to this callback",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/logs_btc"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error"
+          },
+          "404": {
+            "description": "No request or no payment callbacks found"
+          }
+        }
+      }
+    },
+    "/bch/create/": {
+      "get": {
+        "tags": [
+          "Bitcoin Cash"
+        ],
+        "summary": "Create a new BCH address to receive payments",
+        "description": "This method is used to generate a new Bitcoin Cash address to give your clients, where they can send payments.<br/>This service has a minimum amount of **{{ bch.min_tx }} BCH**, any values below that will be ignored.<br/>Fee is calculated as follows: &emsp;``max({{ bch.min_fee }}, {{ bch.fee|divide:100 }} * amount)``<br/>Which means that the fee is {{ bch.fee }}% or {{ bch.min_fee }} BCH, whichever is greater",
+        "operationId": "bchcreate",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "callback",
+            "description": "The URL the callbacks will be sent to. Must be a valid URL",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "address",
+            "description": "Address or addresses where the payment will be forwarded to.<br/> In case of multiple addresses, it should be in the following format: `<percentage_1>@<address_1>|<percentage_2>@<address_2>` and so on. <br/>Percentages are set from 0.1 to 1.0 and must add up to 1.00 (100%).<br/> Addresses must be valid.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pending",
+            "description": "Set this to 1 if you want to be notified of pending transactions (before they're confirmed)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Address was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/create_bch"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error creating address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        },
+        "callbacks": {
+          "Confirmed": {
+            "Confirmed Callback": {
+              "get": {
+                "$ref": "#/components/schemas/confirmed_callback",
+              }
+            }
+          },
+          "Pending": {
+            "Pending Callback": {
+              "get": {
+                "$ref": "#/components/schemas/pending_callback",
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bch/logs/": {
+      "get": {
+        "tags": [
+          "Bitcoin Cash"
+        ],
+        "summary": "Check the callback logs for a certain callback URL",
+        "description": "This method is used to check logs for your callback URLs",
+        "operationId": "bchlogs",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "callback",
+            "description": "The URL of the callback",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of payments sent to this callback",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/logs_bch"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error"
+          },
+          "404": {
+            "description": "No request or no payment callbacks found"
+          }
+        }
+      }
+    },
+    "/ltc/create/": {
+      "get": {
+        "tags": [
+          "Litecoin"
+        ],
+        "summary": "Create a new Litecoin address to receive payments",
+        "description": "This method is used to generate a new Litecoin address to give your clients, where they can send payments.<br/>This service has a minimum amount of **{{ ltc.min_tx }} LTC**, any values below that will be ignored.<br/>Fee is calculated as follows: &emsp;``max({{ ltc.min_fee }}, {{ ltc.fee|divide:100 }} * amount)``<br/>Which means that the fee is {{ ltc.fee }}% or {{ ltc.min_fee }} LTC, whichever is greater",
+        "operationId": "ltccreate",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "callback",
+            "description": "The URL the callbacks will be sent to. Must be a valid URL",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "address",
+            "description": "Address or addresses where the payment will be forwarded to.<br/> In case of multiple addresses, it should be in the following format: `<percentage_1>@<address_1>|<percentage_2>@<address_2>` and so on. <br/>Percentages are set from 0.1 to 1.0 and must add up to 1.00 (100%).<br/> Addresses must be valid.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pending",
+            "description": "Set this to 1 if you want to be notified of pending transactions (before they're confirmed)",
+            "required": false,
+            "schema": {
+              "type": "int"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Address was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/create_ltc"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error creating address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        },
+        "callbacks": {
+          "Confirmed": {
+            "Confirmed Callback": {
+              "get": {
+                "$ref": "#/components/schemas/confirmed_callback",
+              }
+            }
+          },
+          "Pending": {
+            "Pending Callback": {
+              "get": {
+                "$ref": "#/components/schemas/pending_callback",
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ltc/logs/": {
+      "get": {
+        "tags": [
+          "Litecoin"
+        ],
+        "summary": "Check the callback logs for a certain callback URL",
+        "description": "This method is used to check logs for your callback URLs",
+        "operationId": "ltclogs",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "callback",
+            "description": "The URL of the callback",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of payments sent to this callback",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/logs_ltc"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error"
+          },
+          "404": {
+            "description": "No request or no payment callbacks found"
+          }
+        }
+      }
+    },
+    "/eth/create/": {
+      "get": {
+        "tags": [
+          "Ethereum"
+        ],
+        "summary": "Create a new Ethereum address to receive payments",
+        "description": "This method is used to generate a new Ethereum address to give your clients, where they can send payments.<br/>This service has a minimum amount of **{{ eth.min_tx }} ether**, any values below that will be ignored.<br/>Fee is calculated as follows: &emsp;``max({{ eth.min_fee }}, {{ eth.fee|divide:100 }} * amount)``<br/>Which means that the fee is {{ eth.fee }}% or {{ eth.min_fee }} ether, whichever is greater.<br/><br/>**Attention:**<br/> - **We don't currently support transactions from smart contracts**<br/> - Requests are only checked for **90 days** after the last payment, after which they are considered inactive, to re-activate older requests just re-call the ``/eth/create`` endpoint with the same ``callback``.",
+        "operationId": "ethcreate",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "callback",
+            "description": "The URL the callbacks will be sent to. Must be a valid URL",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "address",
+            "description": "Address or addresses where the payment will be forwarded to.<br/> In case of multiple addresses, it should be in the following format: `<percentage_1>@<address_1>|<percentage_2>@<address_2>` and so on. <br/>Percentages are set from 0.1 to 1.0 and must add up to 1.00 (100%).<br/> Addresses must be valid.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pending",
+            "description": "Set this to 1 if you want to be notified of pending transactions (before they're confirmed)",
+            "required": false,
+            "schema": {
+              "type": "int"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Address was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/create_eth"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error creating address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        },
+        "callbacks": {
+          "Confirmed": {
+            "Confirmed Callback": {
+              "get": {
+                "$ref": "#/components/schemas/confirmed_callback",
+              }
+            }
+          },
+          "Pending": {
+            "Pending Callback": {
+              "get": {
+                "$ref": "#/components/schemas/pending_callback",
+              }
+            }
+          }
+        }
+      }
+    },
+    "/eth/logs/": {
+      "get": {
+        "tags": [
+          "Ethereum"
+        ],
+        "summary": "Check the callback logs for a certain callback URL",
+        "description": "This method is used to check logs for your callback URLs",
+        "operationId": "ethlogs",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "callback",
+            "description": "The URL of the callback",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of payments sent to this callback",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/logs_eth"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error"
+          },
+          "404": {
+            "description": "No request or no payment callbacks found"
+          }
+        }
+      }
+    },
+    "/xmr/create/": {
+      "get": {
+        "tags": [
+          "Monero"
+        ],
+        "summary": "Create a new Monero address to receive payments",
+        "description": "This method is used to generate a new Monero address to give your clients, where they can send payments.<br/>This service has a minimum amount of **{{ xmr.min_tx }} XMR**, any values below that will be ignored.<br/>Fee is calculated as follows: &emsp;``max({{ xmr.min_fee }}, {{ xmr.fee|divide:100 }} * amount)``<br/>Which means that the fee is {{ xmr.fee }}% or {{ xmr.min_fee }} XMR, whichever is greater.<br/><br/>**Attention:**<br/>- Requests are only checked for **90 days** after the last payment, after which they are considered inactive, to re-activate older requests just re-call the ``/xmr/create`` endpoint with the same ``callback``.<br/>- Due to Monero's `locked` mechanism, transactions are only marked as confirmed and forwarded after 10 confirmations.",
+        "operationId": "xmrcreate",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "callback",
+            "description": "The URL the callbacks will be sent to. Must be a valid URL",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "address",
+            "description": "Address or addresses where the payment will be forwarded to.<br/> In case of multiple addresses, it should be in the following format: `<percentage_1>@<address_1>|<percentage_2>@<address_2>` and so on. <br/>Percentages are set from 0.1 to 1.0 and must add up to 1.00 (100%).<br/> Addresses must be valid.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pending",
+            "description": "Set this to 1 if you want to be notified of pending transactions (before they're confirmed)",
+            "required": false,
+            "schema": {
+              "type": "int"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Address was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/create_xmr"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error creating address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        },
+        "callbacks": {
+          "Confirmed": {
+            "Confirmed Callback": {
+              "get": {
+                "$ref": "#/components/schemas/confirmed_callback",
+              }
+            }
+          },
+          "Pending": {
+            "Pending Callback": {
+              "get": {
+                "$ref": "#/components/schemas/pending_callback",
+              }
+            }
+          }
+        }
+      }
+    },
+    "/xmr/logs/": {
+      "get": {
+        "tags": [
+          "Monero"
+        ],
+        "summary": "Check the callback logs for a certain callback URL",
+        "description": "This method is used to check logs for your callback URLs",
+        "operationId": "xmrlogs",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "callback",
+            "description": "The URL of the callback",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of payments sent to this callback",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/logs_xmr"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error"
+          },
+          "404": {
+            "description": "No request or no payment callbacks found"
+          }
+        }
+      }
+    },
+    "/iota/create/": {
+      "get": {
+        "tags": [
+          "IOTA"
+        ],
+        "summary": "Create a new IOTA address to receive payments",
+        "description": "This method is used to generate a new IOTA address to give your clients, where they can send payments.<br/>This service has a minimum amount of **{{ iota.min_tx }} MIOTAs**, any values below that will be ignored.<br/>Fee is calculated as follows: &emsp;``max({{ iota.min_fee }}, {{ iota.fee|divide:100 }} * amount)``<br/>Which means that the fee is {{ iota.fee }}% or {{ iota.min_fee }} MIOTAs, whichever is greater.<br/><br/>**Attention:**<br/>- Requests are only checked for **90 days** after the last payment, after which they are considered inactive, to re-activate older requests just re-call the ``/iota/create`` endpoint with the same ``callback``.<br/>- Addresses are **non-reusable** on IOTA, so, after the first payment is forwarded, the address is permanently disabled.",
+        "operationId": "iotacreate",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "callback",
+            "description": "The URL the callbacks will be sent to. Must be a valid URL",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "address",
+            "description": "Address or addresses where the payment will be forwarded to.<br/> In case of multiple addresses, it should be in the following format: `<percentage_1>@<address_1>|<percentage_2>@<address_2>` and so on. <br/>Percentages are set from 0.1 to 1.0 and must add up to 1.00 (100%).<br/> Addresses must be valid.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pending",
+            "description": "Set this to 1 if you want to be notified of pending transactions (before they're confirmed)",
+            "required": false,
+            "schema": {
+              "type": "int"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Address was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/create_iota"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error creating address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        },
+        "callbacks": {
+          "Confirmed": {
+            "Confirmed Callback": {
+              "get": {
+                "$ref": "#/components/schemas/confirmed_callback",
+              }
+            }
+          },
+          "Pending": {
+            "Pending Callback": {
+              "get": {
+                "$ref": "#/components/schemas/pending_callback",
+              }
+            }
+          }
+        }
+      }
+    },
+    "/iota/logs/": {
+      "get": {
+        "tags": [
+          "IOTA"
+        ],
+        "summary": "Check the callback logs for a certain callback URL",
+        "description": "This method is used to check logs for your callback URLs",
+        "operationId": "iotalogs",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "callback",
+            "description": "The URL of the callback",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of payments sent to this callback",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/logs_iota"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error"
+          },
+          "404": {
+            "description": "No request or no payment callbacks found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "confirmed_callback": {
+        "description": "Callback issued when a client's transaction has been confirmed by the network",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "address_in",
+            "description": "Address where your client's payment was received",
+            "example": "14PqCsA7KMgseZMPwg6mJy754MtQkrgszu",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "address_out",
+            "description": "Address(es) where we forwarded your payment",
+            "example": "1H6ZZpRmMnrw8ytepV3BYwMjYYnEkWDqVP (single address)   {1H6ZZpRmMnrw8ytepV3BYwMjYYnEkWDqVP: 0.70, 1PE5U4temq1rFzseHHGE2L8smwHCyRbkx3: 0.30} (multiple addresses)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "txid_in",
+            "description": "Transaction hash of your client's payment",
+            "example": "a2174ffd39289100709f2a07b129cdbba69df2e22e5be1830221dab1fd4e332c",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "txid_out",
+            "description": "Transaction hash of our the payment forwarded to you",
+            "example": "a2174ffd39289100709f2a07b129cdbba69df2e22e5be1830221dab1fd4e332c",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "confirmations",
+            "description": "Number of confirmations at the moment the callback was sent",
+            "example": 1,
+            "schema": {
+              "type": "int"
+            }
+          },
+          {
+            "in": "query",
+            "name": "value",
+            "description": "Value of the payment (in Satoshi, Litoshi, Wei, Piconero, or IOTA)",
+            "example": 50000,
+            "schema": {
+              "type": "int"
+            }
+          },
+          {
+            "in": "query",
+            "name": "value_forwarded",
+            "description": "Value forwarded to you, after fees (in Satoshi, Litoshi, Wei, Piconero, or IOTA)",
+            "example": 50000,
+            "schema": {
+              "type": "int"
+            }
+          },
+          {
+            "in": "query",
+            "name": "coin",
+            "description": "Ticker of the coin used for the payment: ['btc', 'bch', 'ltc', 'eth', 'xmr', 'iota']",
+            "example": "btc",
+            "schema": {
+              "type": "string"
+            }
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "Expected response from your server<br/>The callback will be marked as successful when it receives the following response from your server (without the quotes)",
+            "content": {
+              "text/plain": {
+                "example": "*ok*"
+              }
+            }
+          }
+        }
+      },
+      "pending_callback": {
+        "description": "Callback issued when a client's transaction is pending confirmation. <br/> **Note:** Only issued if you have requested to be notified of pending transactions",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "address_in",
+            "description": "Address where your client's payment was received",
+            "example": "14PqCsA7KMgseZMPwg6mJy754MtQkrgszu",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "address_out",
+            "description": "Address(es) where we forwarded your payment",
+            "example": "1H6ZZpRmMnrw8ytepV3BYwMjYYnEkWDqVP (single address)   {1H6ZZpRmMnrw8ytepV3BYwMjYYnEkWDqVP: 0.70, 1PE5U4temq1rFzseHHGE2L8smwHCyRbkx3: 0.30} (multiple addresses)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "txid_in",
+            "description": "Transaction hash of your client's payment",
+            "example": "a2174ffd39289100709f2a07b129cdbba69df2e22e5be1830221dab1fd4e332c",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "confirmations",
+            "description": "Number of confirmations at the moment the callback was sent",
+            "example": 1,
+            "schema": {
+              "type": "int"
+            }
+          },
+          {
+            "in": "query",
+            "name": "value",
+            "description": "Value of the payment (in Satoshi, Litoshi, Wei, Piconero, or IOTA)",
+            "example": 50000,
+            "schema": {
+              "type": "int"
+            }
+          },
+          {
+            "in": "query",
+            "name": "coin",
+            "description": "Ticker of the coin used for the payment: ['btc', 'bch', 'ltc', 'eth', 'xmr', 'iota']",
+            "example": "btc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pending",
+            "description": "1 if transaction is pending",
+            "example": 1,
+            "schema": {
+              "type": "int"
+            }
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "Expected response from your server",
+            "content": {
+              "text/plain": {
+                "example": "*ok*"
+              }
+            }
+          }
+        }
+      },
+      "info": {
+        "type": "object",
+        "properties": {
+          "coin": {
+            "type": "string",
+            "example": "Bitcoin",
+            "description": "Human readable name of the currency"
+          },
+          "minimum_transaction": {
+            "type": "int",
+            "example": "20000",
+            "description": "Minimum transaction value for this currency, values below this value are disregarded"
+          },
+          "minimum_fee": {
+            "type": "int",
+            "example": "200",
+            "description": "{{ request.settings.site_title }}'s minimum fee for this currency, in atomic units"
+          },
+          "fee_percent": {
+            "type": "float",
+            "description": "Fee percentage for this currency",
+            "example": "1.00"
+          },
+          "prices_updated": {
+            "type": "string",
+            "description": "Datetime of the last price update",
+            "example": "2019-10-14T13:00:09.585Z"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "success"
+          },
+          "prices": {
+            "type": "object",
+            "description": "Object with the exchange rate of this currency in various FIAT currencies.<br/> Keys are the names of the currencies, values are the exchange rates.<br/> Updated hourly.",
+            "example": "{'DKK': '56281.94', 'CAD': '10985.14', 'AED': '30517.01', 'BRL': '34243.36', 'USD': '8308.47', 'MXN': '160193.26', 'CNY': '58740.88', 'INR': '591471.72', 'JPY': '899719.16', 'HKD': '65173.93', 'GBP': '6616.08', 'EUR': '7535.35'}",
+          }
+        }
+      },
+      "create_btc": {
+        "type": "object",
+        "properties": {
+          "address_in": {
+            "type": "string",
+            "example": "14PqCsA7KMgseZMPwg6mJy754MtQkrgszu",
+            "description": "Generated Address, give this to your client"
+          },
+          "address_out": {
+            "type": "string",
+            "example": "1H6ZZpRmMnrw8ytepV3BYwMjYYnEkWDqVP (single address)   {1H6ZZpRmMnrw8ytepV3BYwMjYYnEkWDqVP: 0.70, 1PE5U4temq1rFzseHHGE2L8smwHCyRbkx3: 0.30} (multiple addresses)",
+            "description": "Your address(es), where the payment will be forwarded to, should be the same address(es) you provided."
+          },
+          "callback_url": {
+            "type": "string",
+            "example": "example.com/invoice/1234?payment_id=5678",
+            "description": "The callback URL you provided"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "success"
+          }
+        }
+      },
+      "create_bch": {
+        "type": "object",
+        "properties": {
+          "address_in": {
+            "type": "string",
+            "example": "bitcoincash:qrz6pkvsaxmy6aypy8sdvg5l3pac8zg3qvtqdaarwq",
+            "description": "Generated Address, give this to your client"
+          },
+          "address_out": {
+            "type": "string",
+            "example": "bitcoincash:qp9jm0p20n2k7qja6fdldr3d2s7jgfr78qupa2unh6 (single address)   {bitcoincash:qrz6pkvsaxmy6aypy8sdvg5l3pac8zg3qvtqdaarwq: 0.70, bitcoincash:qp9jm0p20n2k7qja6fdldr3d2s7jgfr78qupa2unh6: 0.30} (multiple addresses)",
+            "description": "Your address(es), where the payment will be forwarded to, should be the same address(es) you provided."
+          },
+          "callback_url": {
+            "type": "string",
+            "example": "example.com/invoice/1234?payment_id=5678",
+            "description": "The callback URL you provided"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "success"
+          }
+        }
+      },
+      "create_ltc": {
+        "type": "object",
+        "properties": {
+          "address_in": {
+            "type": "string",
+            "example": "LLGrzcbppKCii4377sMpRiiBeNP8QjWnqt",
+            "description": "Generated Address, give this to your client"
+          },
+          "address_out": {
+            "type": "string",
+            "example": "LPwDU8H4uMT8jgv2mqrk43HeVu93isftgs (single address)   {LPwDU8H4uMT8jgv2mqrk43HeVu93isftgs: 0.70, LLGrzcbppKCii4377sMpRiiBeNP8QjWnqt: 0.30} (multiple addresses)",
+            "description": "Your address(es), where the payment will be forwarded to, should be the same address(es) you provided."
+          },
+          "callback_url": {
+            "type": "string",
+            "example": "example.com/invoice/1234?payment_id=5678",
+            "description": "The callback URL you provided"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "success"
+          }
+        }
+      },
+      "create_eth": {
+        "type": "object",
+        "properties": {
+          "address_in": {
+            "type": "string",
+            "example": "0x4fdd5eb2fb260149a3903859043e962ab89d8ed4",
+            "description": "Generated Address, give this to your client"
+          },
+          "address_out": {
+            "type": "string",
+            "example": "0xbe3fF0556cbA8097a6037d676b08de198D58aB24 (single address)   {0xbe3fF0556cbA8097a6037d676b08de198D58aB24: 0.70, 0x76e81bf0d554c1c9237cc143905079c6a4a5bf26: 0.30} (multiple addresses)",
+            "description": "Your address(es), where the payment will be forwarded to, should be the same address(es) you provided."
+          },
+          "callback_url": {
+            "type": "string",
+            "example": "example.com/invoice/1234?payment_id=5678",
+            "description": "The callback URL you provided"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "success"
+          }
+        }
+      },
+      "create_xmr": {
+        "type": "object",
+        "properties": {
+          "address_in": {
+            "type": "string",
+            "example": "84wnBPZxhSrHFRnrHnBsnti5jZkWcXJRrYJWJ4A61xEQfJF4H8VL9RZGcvSrQKumMNFHgEqHiJvMHWkx67w64Q2sQRmkxE7",
+            "description": "Generated Address, give this to your client"
+          },
+          "address_out": {
+            "type": "string",
+            "example": "46HoWpJHu4LcKvxXisHsKBVKTNgZFDjjBUinRfFLcMi63uEAEitRcJi6UJDUmyRSvQYq4WgSttXAg133hrdtKZWaMsed5ra (single address)   {46HoWpJHu4LcKvxXisHsKBVKTNgZFDjjBUinRfFLcMi63uEAEitRcJi6UJDUmyRSvQYq4WgSttXAg133hrdtKZWaMsed5ra: 0.70, 84wnBPZxhSrHFRnrHnBsnti5jZkWcXJRrYJWJ4A61xEQfJF4H8VL9RZGcvSrQKumMNFHgEqHiJvMHWkx67w64Q2sQRmkxE7: 0.30} (multiple addresses)",
+            "description": "Your address(es), where the payment will be forwarded to, should be the same address(es) you provided."
+          },
+          "callback_url": {
+            "type": "string",
+            "example": "example.com/invoice/1234?payment_id=5678",
+            "description": "The callback URL you provided"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "success"
+          }
+        }
+      },
+      "create_iota": {
+        "type": "object",
+        "properties": {
+          "address_in": {
+            "type": "string",
+            "example": "OLJGHNLGOTKLANHYQMDAUWOJNPX9PAOGQETYBYLFTLDXETXJNV9P9UCDWAXSPAEHUONHBHJCGGWNJDYIDUQLIPWXYW",
+            "description": "Generated Address, give this to your client"
+          },
+          "address_out": {
+            "type": "string",
+            "example": "TLMPUKLIMFJ9BDV9ZWMSTVOXZVOJBKNWXQPUSCPMUAUVZMD9G99TAUANUWIPQR9GZMCISTSH9FRMRVIYDZCBJFGWVY (single address)   {TLMPUKLIMFJ9BDV9ZWMSTVOXZVOJBKNWXQPUSCPMUAUVZMD9G99TAUANUWIPQR9GZMCISTSH9FRMRVIYDZCBJFGWVY: 0.70, GCSTVSRTLLPBEXZNGWTDHCGPNVARNSRXFPWGAWTQBSZLIMELSZPWKKTKXHKBXIUDNGQFHVYAZMHG9NXNDRXPRLL9ZA: 0.30} (multiple addresses)",
+            "description": "Your address(es), where the payment will be forwarded to, should be the same address(es) you provided."
+          },
+          "callback_url": {
+            "type": "string",
+            "example": "example.com/invoice/1234?payment_id=5678",
+            "description": "The callback URL you provided"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "success"
+          }
+        }
+      },
+      "error": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "error"
+          },
+          "error": {
+            "type": "string",
+            "example": "You must provide a valid address and a callback",
+            "description": "Only shown in case there's an error, with the error description"
+          }
+        }
+      },
+      "logs_btc": {
+        "type": "object",
+        "properties": {
+          "address_in": {
+            "type": "string",
+            "example": "14PqCsA7KMgseZMPwg6mJy754MtQkrgszu",
+            "description": "Generated Address, give this to your client"
+          },
+          "address_out": {
+            "type": "string",
+            "example": "1H6ZZpRmMnrw8ytepV3BYwMjYYnEkWDqVP (single address)   {1H6ZZpRmMnrw8ytepV3BYwMjYYnEkWDqVP: 0.70, 1PE5U4temq1rFzseHHGE2L8smwHCyRbkx3: 0.30} (multiple addresses)",
+            "description": "Your address(es), where the payment will be forwarded to, should be the same address(es) you provided."
+          },
+          "callback_url": {
+            "type": "string",
+            "example": "example.com/invoice/1234?payment_id=5678",
+            "description": "The callback URL you provided"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "success"
+          },
+          "notify_pending": {
+            "type": "boolean",
+            "description": "Get notified of pending transactions",
+            "example": true
+          },
+          "callbacks": {
+            "type": "array",
+            "description": "List of payments made to this address",
+            "items": {
+              "$ref": "#/components/schemas/log_items_btc"
+            }
+          }
+        }
+      },
+      "logs_bch": {
+        "type": "object",
+        "properties": {
+          "address_in": {
+            "type": "string",
+            "example": "bitcoincash:qrz6pkvsaxmy6aypy8sdvg5l3pac8zg3qvtqdaarwq",
+            "description": "Generated Address, give this to your client"
+          },
+          "address_out": {
+            "type": "string",
+            "example": "bitcoincash:qp9jm0p20n2k7qja6fdldr3d2s7jgfr78qupa2unh6 (single address)   {bitcoincash:qrz6pkvsaxmy6aypy8sdvg5l3pac8zg3qvtqdaarwq: 0.70, bitcoincash:qp9jm0p20n2k7qja6fdldr3d2s7jgfr78qupa2unh6: 0.30} (multiple addresses)",
+            "description": "Your address(es), where the payment will be forwarded to, should be the same address(es) you provided."
+          },
+          "callback_url": {
+            "type": "string",
+            "example": "example.com/invoice/1234?payment_id=5678",
+            "description": "The callback URL you provided"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "success"
+          },
+          "notify_pending": {
+            "type": "boolean",
+            "description": "Get notified of pending transactions",
+            "example": true
+          },
+          "callbacks": {
+            "type": "array",
+            "description": "List of payments made to this address",
+            "items": {
+              "$ref": "#/components/schemas/log_items_bch"
+            }
+          }
+        }
+      },
+      "logs_ltc": {
+        "type": "object",
+        "properties": {
+          "address_in": {
+            "type": "string",
+            "example": "LLGrzcbppKCii4377sMpRiiBeNP8QjWnqt",
+            "description": "Generated Address, give this to your client"
+          },
+          "address_out": {
+            "type": "string",
+            "example": "LPwDU8H4uMT8jgv2mqrk43HeVu93isftgs (single address)   {LPwDU8H4uMT8jgv2mqrk43HeVu93isftgs: 0.70, LLGrzcbppKCii4377sMpRiiBeNP8QjWnqt: 0.30} (multiple addresses)",
+            "description": "Your address(es), where the payment will be forwarded to, should be the same address(es) you provided."
+          },
+          "callback_url": {
+            "type": "string",
+            "example": "example.com/invoice/1234?payment_id=5678",
+            "description": "The callback URL you provided"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "success"
+          },
+          "notify_pending": {
+            "type": "boolean",
+            "description": "Get notified of pending transactions",
+            "example": true
+          },
+          "callbacks": {
+            "type": "array",
+            "description": "List of payments made to this address",
+            "items": {
+              "$ref": "#/components/schemas/log_items_ltc"
+            }
+          }
+        }
+      },
+      "logs_eth": {
+        "type": "object",
+        "properties": {
+          "address_in": {
+            "type": "string",
+            "example": "0x4fdd5eb2fb260149a3903859043e962ab89d8ed4",
+            "description": "Generated Address, give this to your client"
+          },
+          "address_out": {
+            "type": "string",
+            "example": "0xbe3fF0556cbA8097a6037d676b08de198D58aB24 (single address)   {0xbe3fF0556cbA8097a6037d676b08de198D58aB24: 0.70, 0x76e81bf0d554c1c9237cc143905079c6a4a5bf26: 0.30} (multiple addresses)",
+            "description": "Your address(es), where the payment will be forwarded to, should be the same address(es) you provided."
+          },
+          "callback_url": {
+            "type": "string",
+            "example": "example.com/invoice/1234?payment_id=5678",
+            "description": "The callback URL you provided"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "success"
+          },
+          "notify_pending": {
+            "type": "boolean",
+            "description": "Get notified of pending transactions",
+            "example": true
+          },
+          "callbacks": {
+            "type": "array",
+            "description": "List of payments made to this address",
+            "items": {
+              "$ref": "#/components/schemas/log_items_eth"
+            }
+          }
+        }
+      },
+      "logs_xmr": {
+        "type": "object",
+        "properties": {
+          "address_in": {
+            "type": "string",
+            "example": "84wnBPZxhSrHFRnrHnBsnti5jZkWcXJRrYJWJ4A61xEQfJF4H8VL9RZGcvSrQKumMNFHgEqHiJvMHWkx67w64Q2sQRmkxE7",
+            "description": "Generated Address, give this to your client"
+          },
+          "address_out": {
+            "type": "string",
+            "example": "46HoWpJHu4LcKvxXisHsKBVKTNgZFDjjBUinRfFLcMi63uEAEitRcJi6UJDUmyRSvQYq4WgSttXAg133hrdtKZWaMsed5ra (single address)   {46HoWpJHu4LcKvxXisHsKBVKTNgZFDjjBUinRfFLcMi63uEAEitRcJi6UJDUmyRSvQYq4WgSttXAg133hrdtKZWaMsed5ra: 0.70, 84wnBPZxhSrHFRnrHnBsnti5jZkWcXJRrYJWJ4A61xEQfJF4H8VL9RZGcvSrQKumMNFHgEqHiJvMHWkx67w64Q2sQRmkxE7: 0.30} (multiple addresses)",
+            "description": "Your address(es), where the payment will be forwarded to, should be the same address(es) you provided."
+          },
+          "callback_url": {
+            "type": "string",
+            "example": "example.com/invoice/1234?payment_id=5678",
+            "description": "The callback URL you provided"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "success"
+          },
+          "notify_pending": {
+            "type": "boolean",
+            "description": "Get notified of pending transactions",
+            "example": true
+          },
+          "callbacks": {
+            "type": "array",
+            "description": "List of payments made to this address",
+            "items": {
+              "$ref": "#/components/schemas/log_items_xmr"
+            }
+          }
+        }
+      },
+      "logs_iota": {
+        "type": "object",
+        "properties": {
+          "address_in": {
+            "type": "string",
+            "example": "OLJGHNLGOTKLANHYQMDAUWOJNPX9PAOGQETYBYLFTLDXETXJNV9P9UCDWAXSPAEHUONHBHJCGGWNJDYIDUQLIPWXYW",
+            "description": "Generated Address, give this to your client"
+          },
+          "address_out": {
+            "type": "string",
+            "example": "TLMPUKLIMFJ9BDV9ZWMSTVOXZVOJBKNWXQPUSCPMUAUVZMD9G99TAUANUWIPQR9GZMCISTSH9FRMRVIYDZCBJFGWVY (single address)   {TLMPUKLIMFJ9BDV9ZWMSTVOXZVOJBKNWXQPUSCPMUAUVZMD9G99TAUANUWIPQR9GZMCISTSH9FRMRVIYDZCBJFGWVY: 0.70, GCSTVSRTLLPBEXZNGWTDHCGPNVARNSRXFPWGAWTQBSZLIMELSZPWKKTKXHKBXIUDNGQFHVYAZMHG9NXNDRXPRLL9ZA: 0.30} (multiple addresses)",
+            "description": "Your address(es), where the payment will be forwarded to, should be the same address(es) you provided."
+          },
+          "callback_url": {
+            "type": "string",
+            "example": "example.com/invoice/1234?payment_id=5678",
+            "description": "The callback URL you provided"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "success"
+          },
+          "notify_pending": {
+            "type": "boolean",
+            "description": "Get notified of pending transactions",
+            "example": true
+          },
+          "callbacks": {
+            "type": "array",
+            "description": "List of payments made to this address",
+            "items": {
+              "$ref": "#/components/schemas/log_items_iota"
+            }
+          }
+        }
+      },
+      "log_items_btc": {
+        "type": "object",
+        "properties": {
+          "txid_in": {
+            "type": "string",
+            "example": "33f11611f863d7475eb10daada2f225f0877561cf58cdfff175e99635dfd9120",
+            "description": "Hash of the transaction received from the client"
+          },
+          "txid_out": {
+            "type": "string",
+            "example": "5ea53d5e728bfdb56b54c0b945990b69ae1e66cec56ab24679c9a622c4695276",
+            "description": "Hash of the transaction of the payment to you"
+          },
+          "value": {
+            "type": "integer",
+            "example": 100000,
+            "description": "Value paid by the client, in Satoshi"
+          },
+          "confirmations": {
+            "type": "integer",
+            "description": "Number of confirmations at the time the callback was sent to your URL",
+            "example": 13
+          },
+          "last_update": {
+            "type": "string",
+            "description": "Time and date when this callback was last updated (UTC)",
+            "example": "15/02/2018 21:23:42"
+          },
+          "result": {
+            "type": "string",
+            "description": "Result status of this callback: pending (transaction from user is not confirmed yet), received (received payment from user), sent (forwarded payment to you) and done (callback sent to your URL and received valid response [\\*ok\\*])",
+            "example": "done"
+          },
+          "fee_percent": {
+            "type": "number",
+            "description": "Percentage taken as a fee from client's payment",
+            "example": 1
+          },
+          "fee": {
+            "type": "number",
+            "description": "Fee deducted by our system, in Satoshi",
+            "example": 10000
+          }
+        }
+      },
+      "log_items_bch": {
+        "type": "object",
+        "properties": {
+          "txid_in": {
+            "type": "string",
+            "example": "33f11611f863d7475eb10daada2f225f0877561cf58cdfff175e99635dfd9120",
+            "description": "Hash of the transaction received from the client"
+          },
+          "txid_out": {
+            "type": "string",
+            "example": "5ea53d5e728bfdb56b54c0b945990b69ae1e66cec56ab24679c9a622c4695276",
+            "description": "Hash of the transaction of the payment to you"
+          },
+          "value": {
+            "type": "integer",
+            "example": 100000,
+            "description": "Value paid by the client, in Satoshi"
+          },
+          "confirmations": {
+            "type": "integer",
+            "description": "Number of confirmations at the time the callback was sent to your URL",
+            "example": 13
+          },
+          "last_update": {
+            "type": "string",
+            "description": "Time and date when this callback was last updated (UTC)",
+            "example": "15/02/2018 21:23:42"
+          },
+          "result": {
+            "type": "string",
+            "description": "Result status of this callback: pending (transaction from user is not confirmed yet), received (received payment from user), sent (forwarded payment to you) and done (callback sent to your URL and received valid response [\\*ok\\*])",
+            "example": "done"
+          },
+          "fee_percent": {
+            "type": "number",
+            "description": "Percentage taken as a fee from client's payment",
+            "example": 1
+          },
+          "fee": {
+            "type": "number",
+            "description": "Fee deducted by our system, in Satoshi",
+            "example": 20000
+          }
+        }
+      },
+      "log_items_ltc": {
+        "type": "object",
+        "properties": {
+          "txid_in": {
+            "type": "string",
+            "example": "81e2c58afe2ebf1a9808abb039205c7ac99cc33615df34afbcca22fadc9c8e34",
+            "description": "Hash of the transaction received from the client"
+          },
+          "txid_out": {
+            "type": "string",
+            "example": "aba4927f72131d264337c1524b1d734a288ddfedc5409d02c9301ddca310bc59",
+            "description": "Hash of the transaction of the payment to you"
+          },
+          "value": {
+            "type": "integer",
+            "example": 500000,
+            "description": "Value paid by the client, in Litoshi"
+          },
+          "confirmations": {
+            "type": "integer",
+            "description": "Number of confirmations at the time the callback was sent to your URL",
+            "example": 13
+          },
+          "last_update": {
+            "type": "string",
+            "description": "Time and date when this callback was last updated (UTC)",
+            "example": "15/02/2018 21:23:42"
+          },
+          "result": {
+            "type": "string",
+            "description": "Result status of this callback: pending (transaction from user is not confirmed yet), received (received payment from user), sent (forwarded payment to you) and done (callback sent to your URL and received valid response [\\*ok\\*])",
+            "example": "done"
+          },
+          "fee_percent": {
+            "type": "number",
+            "description": "Percentage taken as a fee from client's payment",
+            "example": 1
+          },
+          "fee": {
+            "type": "number",
+            "description": "Fee deducted by our system, in Litoshi",
+            "example": 200000
+          }
+        }
+      },
+      "log_items_eth": {
+        "type": "object",
+        "properties": {
+          "txid_in": {
+            "type": "string",
+            "example": "0xc95b8b6546920bd264b6325841d8c168068992897c6ad480978610de8cd05cd6",
+            "description": "Hash of the transaction received from the client"
+          },
+          "txid_out": {
+            "type": "string",
+            "example": "0x9a47812d1346aa01b9049d0753b9c4fbe32a970fdb9ec4b095c0382b70704e4f ",
+            "description": "Hash of the transaction of the payment to you"
+          },
+          "value": {
+            "type": "integer",
+            "example": 1000000000000000,
+            "description": "Value paid by the client, in wei"
+          },
+          "confirmations": {
+            "type": "integer",
+            "description": "Number of confirmations at the time the callback was sent to your URL",
+            "example": 13
+          },
+          "last_update": {
+            "type": "string",
+            "description": "Time and date when this callback was last updated (UTC)",
+            "example": "15/02/2018 21:23:42"
+          },
+          "result": {
+            "type": "string",
+            "description": "Result status of this callback: pending (transaction from user is not confirmed yet), received (received payment from user), sent (forwarded payment to you) and done (callback sent to your URL and received valid response [\\*ok\\*])",
+            "example": "done"
+          },
+          "fee_percent": {
+            "type": "number",
+            "description": "Percentage taken as a fee from client's payment",
+            "example": 1
+          },
+          "fee": {
+            "type": "number",
+            "description": "Fee deducted by our system, in Wei",
+            "example": 200000000000000
+          }
+        }
+      },
+      "log_items_xmr": {
+        "type": "object",
+        "properties": {
+          "txid_in": {
+            "type": "string",
+            "example": "55bc3a3653d3b547c7809ba442b960b42bb925d4b0f54721ae7a4a6e782d10d5",
+            "description": "Hash of the transaction received from the client"
+          },
+          "txid_out": {
+            "type": "string",
+            "example": "dd338b8a93bb6c547800d8078029878bc7e89c39fa88d9bd1282d7981b5a5c9a",
+            "description": "Hash of the transaction of the payment to you"
+          },
+          "value": {
+            "type": "integer",
+            "example": 25000000000,
+            "description": "Value paid by the client, in atomic units"
+          },
+          "confirmations": {
+            "type": "integer",
+            "description": "Number of confirmations at the time the callback was sent to your URL",
+            "example": 13
+          },
+          "last_update": {
+            "type": "string",
+            "description": "Time and date when this callback was last updated (UTC)",
+            "example": "15/02/2018 21:23:42"
+          },
+          "result": {
+            "type": "string",
+            "description": "Result status of this callback: pending (transaction from user is not confirmed yet), received (received payment from user), sent (forwarded payment to you) and done (callback sent to your URL and received valid response [\\*ok\\*])",
+            "example": "done"
+          },
+          "fee_percent": {
+            "type": "number",
+            "description": "Percentage taken as a fee from client's payment",
+            "example": 1
+          },
+          "fee": {
+            "type": "number",
+            "description": "Fee deducted by our system, in atomic units",
+            "example": 500000000
+          }
+        }
+      },
+      "log_items_iota": {
+        "type": "object",
+        "properties": {
+          "txid_in": {
+            "type": "string",
+            "example": "VFDOTMUZOXKPRKUT99N9EWABOFCYZYXOMWDXTXDJTQEAU9ELF9DNJKGMFDDXOUVRLZGBLQUDTUPW99999",
+            "description": "Hash of the transaction received from the client"
+          },
+          "txid_out": {
+            "type": "string",
+            "example": "IZ9VMBW9CSFMUVWHLHYYODDRVARODMU9ORIYAIAYIDRDMLEU9IUAXJGDEYZUWHXNIXINWRXAKRBAZ9999",
+            "description": "Hash of the transaction of the payment to you"
+          },
+          "value": {
+            "type": "integer",
+            "example": 500000,
+            "description": "Value paid by the client, in iotas"
+          },
+          "confirmations": {
+            "type": "integer",
+            "description": "Number of confirmations at the time the callback was sent to your URL",
+            "example": 13
+          },
+          "last_update": {
+            "type": "string",
+            "description": "Time and date when this callback was last updated (UTC)",
+            "example": "15/02/2018 21:23:42"
+          },
+          "result": {
+            "type": "string",
+            "description": "Result status of this callback: pending (transaction from user is not confirmed yet), received (received payment from user), sent (forwarded payment to you) and done (callback sent to your URL and received valid response [\\*ok\\*])",
+            "example": "done"
+          },
+          "fee_percent": {
+            "type": "number",
+            "description": "Percentage taken as a fee from client's payment",
+            "example": 1
+          },
+          "fee": {
+            "type": "number",
+            "description": "Fee deducted by our system, in IOTA",
+            "example": 25000
+          }
+        }
+      }
+    }
+  }
+}
