@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row" style="margin-bottom: 3rem">
+        <div class="col s12 no-padding">
+            <div class="card grey darken-4">
+                <div class="card-content">
+                    <div class="row break-lines">
+                        <div class="col s12 m12 l10 offset-l1 no-padding">
+                            <div class="row" id="fees">
+                                <div class="col s12">
+                                    <h2 class="thin">Pricing / Fees</h2>
+                                    <div class="light" style="font-size: larger">
+                                        <h4 class="thin">{{ request.settings.site_title }} has no set-up or monthly fees, we also do not have any commitment</h4>
+                                        We do have a very straight-forward and very small fee structure, that is subtracted from your payments <br/><br/>
+                                        For each coin we have a minimum transaction value, below which transactions are disregarded, a minimum fee and a percentage fee. <br/><br/>
+                                        Our system's fee is the greatest value between the minimum fee and the fee percentage of the value of the transaction. <br/>
+                                    </div>
+                                    <h4 class="thin">Here are the fee values for each coin:</h4>
+                                    <table class="responsive-table">
+                                        <thead>
+                                        <tr>
+                                            <th>Coin</th>
+                                            <th>Min. TX Value</th>
+                                            <th>Min. Fee</th>
+                                            <th>Fee</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>Bitcoin</td>
+                                            <td>{{ btc.min_tx }} BTC</td>
+                                            <td>{{ btc.min_fee }} BTC</td>
+                                            <td>{{ btc.fee }}%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Bitcoin Cash</td>
+                                            <td>{{ bch.min_tx }} BCH</td>
+                                            <td>{{ bch.min_fee }} BCH</td>
+                                            <td>{{ bch.fee }}%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Litecoin</td>
+                                            <td>{{ ltc.min_tx }} LTC</td>
+                                            <td>{{ ltc.min_fee }} LTC</td>
+                                            <td>{{ ltc.fee }}%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ethereum</td>
+                                            <td>{{ eth.min_tx }} ETH</td>
+                                            <td>{{ eth.min_fee }} ETH</td>
+                                            <td>{{ eth.fee }}%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Monero</td>
+                                            <td>{{ xmr.min_tx }} XMR</td>
+                                            <td>{{ xmr.min_fee }} XMR</td>
+                                            <td>{{ xmr.fee }}%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>IOTA</td>
+                                            <td>{{ iota.min_tx }} MIOTA</td>
+                                            <td>{{ iota.min_fee }} MIOTA</td>
+                                            <td>{{ iota.fee }}%</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

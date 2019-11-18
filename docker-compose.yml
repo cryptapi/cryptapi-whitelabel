@@ -1,0 +1,32 @@
+version: '3'
+services:
+
+  web:
+    build:
+      context: ./conf/web
+      dockerfile: apache.dockerfile
+    image: cryptapi/whitelabel_web
+    container_name: cryptapi_whitelabel_web
+    command: run-apache
+    environment:
+      APACHE_LOG_DIR: /data/logs
+    restart: unless-stopped
+    volumes:
+      - ./volumes/web:/data
+    depends_on:
+      - db
+    ports:
+      - "80:80"
+      - "443:443"
+
+  db:
+    image: postgres:latest
+    container_name: cryptapi_whitelabel_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: whitelabel
+      POSTGRES_USER: whitelabel
+      POSTGRES_PASSWORD: dummypassword_CHANGE_ME
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ./volumes/db:/var/lib/postgresql/data

@@ -1,0 +1,152 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Montserrat', 'Roboto', sans-serif;
+}
+
+.tabs .indicator {
+    background-color: #0088c7 !important;
+}
+
+.tabs .tab a.active {
+    color: #0088c7;
+}
+
+.tabs .tab a:hover {
+    color: #0088c7;
+}
+
+.tabs .tab a {
+    color: #424242;
+}
+
+.tabs {
+    overflow-x: hidden;
+}
+
+.thin {
+    font-weight: 100;
+}
+
+.light {
+    font-weight: 200;
+}
+
+.regular {
+    font-weight: 300;
+}
+
+.thick {
+    font-weight: 400;
+}
+
+.x-thick {
+    font-weight: 500;
+}
+
+.main {
+    position: relative;
+    background: transparent !important;
+}
+
+.main:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: repeat-x center url(../images/bg2.png);
+    opacity: .25;
+}
+
+.collection-header, .collection-item {
+    background: rgba(0, 0, 0, 0) !important;
+}
+
+.no-decoration {
+    text-decoration: none;
+}
+
+.blog-img {
+    width: 100%;
+    pointer-events: none;
+}
+
+@media only screen and (min-width: 993px) {
+    .nav-wrapper {
+        padding: 0 25px;
+    }
+
+    .huge {
+        font-size: 80pt;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    .huge {
+        font-size: 50pt;
+    }
+}
+
+.social a {
+    margin: 0 0 0 15px;
+}
+
+pre.inline {
+    display: inline;
+}
+
+.get-started-btn {
+    margin: 2.5rem 0;
+    border-radius: 27px;
+}
+
+.status-bar button {
+    margin-top: -8px;
+}
+
+pre {
+    overflow-x: auto;
+}
+
+.navbar-fixed {
+    z-index: 999;
+}
+
+.quote {
+    border-radius: 0.2em;
+    padding: 0.3em;
+}
+
+.break-lines {
+    overflow-wrap: break-word !important;
+    word-wrap: break-word !important;
+    -ms-word-break: break-all !important;
+    word-break: break-word !important;
+}
+
+.main-image {
+    width: 80%;
+    max-width: 500px;
+}
+
+.no-margin {
+    margin: 0 !important;
+}
+
+@media only screen and (max-width: 600px) {
+    .ca-logo {
+        height: 56px !important;
+        width: auto;
+    }
+}
+
+@media only screen and (min-width: 601px) {
+    .ca-logo {
+        height: 64px !important;
+        width: auto;
+    }
+}
