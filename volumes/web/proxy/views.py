@@ -65,7 +65,7 @@ def create(_r, coin):
     }
 
     raw_response = process_request(
-        coin=coin,
+        coin=currency.ticker,
         endpoint='create',
         params=params,
     )
@@ -97,9 +97,10 @@ def create(_r, coin):
 
 
 def logs(_r, coin):
+    currency = Currency.get(ticker=coin)
 
-    if coin not in settings.COIN_LIST:
-        return JsonResponse({'status': 'error', 'error': 'Coin not found'})
+    if not currency:
+        return JsonResponse({'status': 'error', 'error': 'Currency not found'})
 
     try:
         _callback = _r.GET.get('callback')
@@ -114,7 +115,7 @@ def logs(_r, coin):
 
             callback_url = build_callback_url(_r, callback_params)
 
-            _logs = fetch_logs(coin, callback_url)
+            _logs = fetch_logs(currency.ticker, callback_url)
 
             if _logs:
 

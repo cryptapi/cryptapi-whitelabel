@@ -19,7 +19,7 @@ class Currency(models.Model):
     @classmethod
     def get(cls, ticker):
         try:
-            return cls.objects.get(ticker__iexact=ticker, active=True)
+            return cls.objects.get(ticker__iexact=ticker.replace('/', '_'), active=True)
 
         except cls.DoesNotExist:
             pass
