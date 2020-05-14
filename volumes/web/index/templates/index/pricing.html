@@ -21,48 +21,22 @@
                                         <thead>
                                         <tr>
                                             <th>Coin</th>
+                                            <th>Ticker</th>
                                             <th>Min. TX Value</th>
                                             <th>Min. Fee</th>
                                             <th>Fee</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td>Bitcoin</td>
-                                            <td>{{ btc.min_tx }} BTC</td>
-                                            <td>{{ btc.min_fee }} BTC</td>
-                                            <td>{{ btc.fee }}%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Bitcoin Cash</td>
-                                            <td>{{ bch.min_tx }} BCH</td>
-                                            <td>{{ bch.min_fee }} BCH</td>
-                                            <td>{{ bch.fee }}%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Litecoin</td>
-                                            <td>{{ ltc.min_tx }} LTC</td>
-                                            <td>{{ ltc.min_fee }} LTC</td>
-                                            <td>{{ ltc.fee }}%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ethereum</td>
-                                            <td>{{ eth.min_tx }} ETH</td>
-                                            <td>{{ eth.min_fee }} ETH</td>
-                                            <td>{{ eth.fee }}%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Monero</td>
-                                            <td>{{ xmr.min_tx }} XMR</td>
-                                            <td>{{ xmr.min_fee }} XMR</td>
-                                            <td>{{ xmr.fee }}%</td>
-                                        </tr>
-                                        <tr>
-                                            <td>IOTA</td>
-                                            <td>{{ iota.min_tx }} MIOTA</td>
-                                            <td>{{ iota.min_fee }} MIOTA</td>
-                                            <td>{{ iota.fee }}%</td>
-                                        </tr>
+                                        {% for coin in coins %}
+                                            <tr>
+                                                <td>{{ coin.name }}</td>
+                                                <td>{{ coin.ticker }}</td>
+                                                <td>{{ coin.min_tx }}</td>
+                                                <td>{{ coin.min_fee }}</td>
+                                                <td>{{ coin.fee }}%</td>
+                                            </tr>
+                                        {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>

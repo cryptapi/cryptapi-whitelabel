@@ -7,6 +7,8 @@ def get_fees():
     multiplier = 1 if not get_setting('extra_fee') else 2
 
     fees = {c.ticker: {
+        'name': c.name,
+        'ticker': c.ticker,
         'min_tx': c.minimum_transfer * multiplier,
         'min_fee': c.minimum_fee,
         'fee': c.fee + get_setting('extra_fee')
