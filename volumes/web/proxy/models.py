@@ -1,10 +1,11 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from settings.models import Currency
 
 
 class Request(models.Model):
-    coin = models.CharField(_('Coin'), max_length=16, choices=settings.COINS)
+    coin = models.ForeignKey(Currency, on_delete=models.CASCADE)
     address_in = models.CharField(_('Payment Address'), max_length=255, default='', db_index=True)
     address_out = models.CharField(_('Receiving Addresses'), max_length=2048, default='')
     raw_address_out = models.CharField(_('Raw Receiving Addresses'), max_length=2048, default='')
@@ -17,7 +18,7 @@ class Request(models.Model):
     last_update = models.DateTimeField(_('Last Update'), auto_now=True)
 
     def __str__(self):
-        return "#{} {} ({}, {})".format(self.id, self.address_in, self.get_coin_display(), self.timestamp.strftime('%x %X'))
+        return "#{} {} ({}, {})".format(self.id, self.address_in, self.coin.name, self.timestamp.strftime('%x %X'))
 
 
 class Payment(models.Model):
@@ -31,7 +32,7 @@ class Payment(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "#{}, {}, {} ({})".format(self.request.id, self.value_paid, self.request.get_coin_display(), self.timestamp.strftime('%x %X'))
+        return "#{}, {}, {} ({})".format(self.request.id, self.value_paid, self.request.coin.name, self.timestamp.strftime('%x %X'))
 
 
 class RequestLog(models.Model):

@@ -24,6 +24,9 @@ class CurrencyAdmin(admin.ModelAdmin):
         })
     )
 
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 class SettingsAdmin(admin.ModelAdmin):
     fieldsets = (

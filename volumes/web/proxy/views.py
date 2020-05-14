@@ -48,7 +48,7 @@ def create(_r, coin):
         _request.notify_pending = notify_pending
         _request.extra_fee = extra_fee
         _request.nonce = nonce
-        _request.coin = coin
+        _request.coin = currency
 
         _request.save()
 
