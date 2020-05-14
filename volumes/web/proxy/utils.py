@@ -74,7 +74,7 @@ def validate_addresses(address_str, extra_fee, cold_wallet):
 
     if extra_fee and cold_wallet:
         remaining = Decimal('1.0') - (extra_fee / 100)
-        addr_dict = {addr: round(pct * remaining, 2) for addr, pct in addr_dict.items()}
+        addr_dict = {addr: round(pct * remaining, 4) for addr, pct in addr_dict.items()}
 
         total = sum(addr_dict.values())
 
