@@ -40,7 +40,7 @@ def create(_r, coin):
 
     nonce = generate_nonce()
 
-    _request, created = Request.objects.get_or_create(callback_url=_callback)
+    _request, created = Request.objects.get_or_create(callback_url=_callback, coin=currency)
 
     if created:
         _request.address_out = pformat(address_dict)
@@ -48,7 +48,6 @@ def create(_r, coin):
         _request.notify_pending = notify_pending
         _request.extra_fee = extra_fee
         _request.nonce = nonce
-        _request.coin = coin
 
         _request.save()
 
@@ -65,7 +64,7 @@ def create(_r, coin):
     }
 
     raw_response = process_request(
-        coin=coin,
+        coin=currency.ticker,
         endpoint='create',
         params=params,
     )
@@ -97,9 +96,10 @@ def create(_r, coin):
 
 
 def logs(_r, coin):
+    currency = Currency.get(ticker=coin)
 
-    if coin not in settings.COIN_LIST:
-        return JsonResponse({'status': 'error', 'error': 'Coin not found'})
+    if not currency:
+        return JsonResponse({'status': 'error', 'error': 'Currency not found'})
 
     try:
         _callback = _r.GET.get('callback')
@@ -114,7 +114,7 @@ def logs(_r, coin):
 
             callback_url = build_callback_url(_r, callback_params)
 
-            _logs = fetch_logs(coin, callback_url)
+            _logs = fetch_logs(currency.ticker, callback_url)
 
             if _logs:
 
@@ -151,6 +151,7 @@ def callback(_r, request_id, nonce):
 
             if _req.extra_fee > 0 and 'value_forwarded' in params:
                 params['value_forwarded'] = int(int(params['value_forwarded']) * (Decimal('1.0') - (_req.extra_fee / 100)))
+                params['value_forwarded_coin'] = str(Decimal(params['value_forwarded_coin']) * (Decimal('1.0') - (_req.extra_fee / 100)))
 
             _payment, created = _req.payment_set.get_or_create(txid_in=params['txid_in'])
             _payment.value_paid = params['value']

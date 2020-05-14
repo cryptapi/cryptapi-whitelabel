@@ -1,6 +1,6 @@
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
-from .models import Settings
+from .models import Settings, Currency
 
 
 class CurrencyAdmin(admin.ModelAdmin):
@@ -24,6 +24,9 @@ class CurrencyAdmin(admin.ModelAdmin):
         })
     )
 
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 class SettingsAdmin(admin.ModelAdmin):
     fieldsets = (
@@ -44,3 +47,4 @@ class SettingsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Settings, SettingsAdmin)
+admin.site.register(Currency, CurrencyAdmin)
