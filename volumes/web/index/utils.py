@@ -18,6 +18,7 @@ def get_fees():
         values['min_fee'] += (get_setting('extra_fee') / 100) * values['min_tx']
 
         for k, v in values.items():
-            values[k] = format(v.normalize(), 'f')
+            if hasattr(v, 'normalize'):
+                values[k] = format(v.normalize(), 'f')
 
     return fees

@@ -26,7 +26,7 @@ def get_started(_r):
 def pricing(_r):
     _c = {
         'site_description': 'Pricing / Fees',
-        **get_fees(),
+        'coins': list(get_fees().values()),
     }
 
     return render(_r, 'index/pricing.html', _c)
