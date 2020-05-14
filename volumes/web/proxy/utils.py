@@ -30,7 +30,7 @@ def process_request(coin, endpoint='create', params=None):
     response = requests.get(
         url="{base_url}{coin}/{endpoint}".format(
             base_url=settings.CRYPTAPI_URL,
-            coin=coin,
+            coin=coin.replace('_', '/'),
             endpoint=endpoint,
         ),
         params=params

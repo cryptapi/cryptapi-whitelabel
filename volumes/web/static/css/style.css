@@ -66,28 +66,9 @@ html, body {
     background: rgba(0, 0, 0, 0) !important;
 }
 
-.no-decoration {
-    text-decoration: none;
-}
-
-.blog-img {
-    width: 100%;
-    pointer-events: none;
-}
-
 @media only screen and (min-width: 993px) {
     .nav-wrapper {
         padding: 0 25px;
-    }
-
-    .huge {
-        font-size: 80pt;
-    }
-}
-
-@media only screen and (max-width: 992px) {
-    .huge {
-        font-size: 50pt;
     }
 }
 

@@ -3,6 +3,7 @@ from django.http import JsonResponse, HttpResponse
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from settings.utils import get as get_setting
+from settings.models import Currency
 
 from .utils import validate_addresses, generate_nonce, build_callback_url, process_request, send_callback, fetch_logs
 from .models import Request
@@ -15,17 +16,18 @@ import json
 
 def create(_r, coin):
 
-    if coin not in settings.COIN_LIST:
-        return JsonResponse({'status': 'error', 'error': 'Coin not found'})
+    currency = Currency.get(ticker=coin)
+
+    if not currency:
+        return JsonResponse({'status': 'error', 'error': 'Currency not found'})
 
     _callback = _r.GET.get('callback')
     address = _r.GET.get('address')
     notify_pending = bool(_r.GET.get('pending', False))
 
     extra_fee = get_setting('extra_fee')
-    cold_wallet = get_setting('{}_coldwallet'.format(coin))
 
-    address_out, address_dict = validate_addresses(address, extra_fee, cold_wallet)
+    address_out, address_dict = validate_addresses(address, extra_fee, currency.coldwallet)
 
     if not address_out or not _callback:
         return JsonResponse({'status': 'error', 'error': 'You must provide a valid Bitcoin address and a callback'}, status=400)
@@ -150,7 +152,7 @@ def callback(_r, request_id, nonce):
             if _req.extra_fee > 0 and 'value_forwarded' in params:
                 params['value_forwarded'] = int(int(params['value_forwarded']) * (Decimal('1.0') - (_req.extra_fee / 100)))
 
-            _payment, created = _req.payment_set.get_or_create(txid_in__iexact=params['txid_in'])
+            _payment, created = _req.payment_set.get_or_create(txid_in=params['txid_in'])
             _payment.value_paid = params['value']
             _payment.confirmations = params['confirmations']
             _payment.pending = True if 'pending' in params else False
@@ -166,6 +168,9 @@ def callback(_r, request_id, nonce):
             _payment.paymentlog_set.create(
                 raw_data=json.dumps(_r.GET)
             )
+
+            if not _req.notify_pending and _payment.pending:
+                return HttpResponse('*ok*')
 
             response = send_callback(_req.callback_url, params)
             return HttpResponse(response)

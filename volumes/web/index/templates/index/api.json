@@ -2,7 +2,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "description": "{{ request.settings.site_title }} is a Bitcoin, Bitcoin Cash, Litecoin, Ethereum, Monero and IOTA payment API.<br/>It is designed with the intent to allow you to integrate multiple coin payments in your service with the least effort possible.<br/>There are no sign-ups, lengthy implementations or API keys required, it is as easy as a simple CURL request to create a new payment address.<br/><br/>The only thing required is that you implement the logic on your server to handle the callbacks sent to your server when the transaction from the client is confirmed.",
+    "description": "{{ request.settings.site_title }} is a cryptocurrency payment API.<br/>It is designed with the intent to allow you to integrate multiple coin payments in your service with the least effort possible.<br/>There are no sign-ups, lengthy implementations or API keys required, it is as easy as a simple CURL request to create a new payment address.<br/><br/>The only thing required is that you implement the logic on your server to handle the callbacks sent to your server when the transaction from the client is confirmed.",
     "version": "v1.6.1",
     "title": "{{ request.settings.site_title }} - Payment API Documentation",
     "contact": {

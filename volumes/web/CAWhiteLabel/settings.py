@@ -11,21 +11,26 @@ ALLOWED_HOSTS = []
 
 CRYPTAPI_URL = 'https://cryptapi.io/api/'
 
-COINS = (
+TOKENS = [
+    ('erc20_usdt', 'ERC-20 USDT'),
+    ('erc20_bcz', 'ERC-20 BECAZ'),
+]
+
+COINS = [
     ('btc', 'Bitcoin'),
     ('eth', 'Ethereum'),
     ('bch', 'Bitcoin Cash'),
     ('ltc', 'Litecoin'),
     ('iota', 'IOTA'),
     ('xmr', 'Monero'),
-)
+] + TOKENS
 
 COIN_LIST = [c[0] for c in COINS]
 
 INSTALLED_APPS = [
-    'settings.apps.SettingsConfig',
     'proxy.apps.ProxyConfig',
     'index.apps.IndexConfig',
+    'settings.apps.SettingsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
