@@ -18,6 +18,8 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    networks:
+      - ca_network
 
   db:
     image: postgres:latest
@@ -30,3 +32,10 @@ services:
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
       - ./volumes/db:/var/lib/postgresql/data
+    networks:
+      - ca_network
+
+networks:
+
+  ca_network:
+    driver: bridge
