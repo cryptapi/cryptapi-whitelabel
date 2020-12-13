@@ -162,7 +162,7 @@ def callback(_r, request_id, nonce):
                 _payment.value_received = params['value_forwarded']
 
             if 'txid_out' in params:
-                _payment.txid_out = params['txid_out']a
+                _payment.txid_out = params['txid_out']
 
             _payment.save()
 
