@@ -156,13 +156,13 @@ def callback(_r, request_id, nonce):
             _payment, created = _req.payment_set.get_or_create(txid_in=params['txid_in'])
             _payment.value_paid = params['value']
             _payment.confirmations = params['confirmations']
-            _payment.pending = True if 'pending' in params else False
+            _payment.pending = bool(int(params.get('pending', 0)))
 
             if 'value_forwarded' in params:
                 _payment.value_received = params['value_forwarded']
 
             if 'txid_out' in params:
-                _payment.txid_out = params['txid_out']
+                _payment.txid_out = params['txid_out']a
 
             _payment.save()
 

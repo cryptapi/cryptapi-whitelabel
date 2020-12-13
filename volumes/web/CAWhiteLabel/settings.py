@@ -9,7 +9,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-CRYPTAPI_URL = 'https://cryptapi.io/api/'
+CRYPTAPI_URL = 'https://api.cryptapi.io/'
 
 INSTALLED_APPS = [
     'proxy.apps.ProxyConfig',
