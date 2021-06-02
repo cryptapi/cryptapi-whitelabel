@@ -1,5 +1,4 @@
 from django.db import models
-from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from settings.models import Currency
 
@@ -11,7 +10,11 @@ class Request(models.Model):
     raw_address_out = models.CharField(_('Raw Receiving Addresses'), max_length=2048, default='')
     extra_fee = models.DecimalField(_('Extra Fee'), default=0, max_digits=3, decimal_places=2)
     callback_url = models.CharField(_('Callback URL'), max_length=2048, default='')
+
     notify_pending = models.BooleanField(_('Notify Pending'), default=False)
+    notify_confirmations = models.IntegerField(_('Notify Confirmations'), default=1)
+    notify_post = models.BooleanField(_('Notify Post'), default=False)
+    priority_slug = models.CharField(_('Priority Slug'), max_length=32)
 
     nonce = models.CharField(_('Nonce'), max_length=32, default='')
     timestamp = models.DateTimeField(_('Timestamp'), auto_now_add=True)

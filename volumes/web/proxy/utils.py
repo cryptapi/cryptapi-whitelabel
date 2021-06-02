@@ -39,8 +39,13 @@ def process_request(coin, endpoint='create', params=None):
     return response
 
 
-def send_callback(url, params):
-    response = requests.get(url, params=params)
+def send_callback(req, params):
+
+    if not req.notify_post:
+        response = requests.get(req.callback_url, params=params)
+    else:
+        response = requests.post(req.callback_url, data=params)
+
     return response.text.strip()
 
 

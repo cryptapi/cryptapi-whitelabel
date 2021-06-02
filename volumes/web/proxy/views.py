@@ -24,13 +24,16 @@ def create(_r, coin):
     _callback = _r.GET.get('callback')
     address = _r.GET.get('address')
     notify_pending = bool(_r.GET.get('pending', False))
+    notify_post = bool(_r.GET.get('post', False))
+    notify_confirmations = min(1000000000, int(_r.GET.get('confirmations', 1)))
+    priority_slug = _r.GET.get('priority', 'default')
 
     extra_fee = get_setting('extra_fee')
 
     address_out, address_dict = validate_addresses(address, extra_fee, currency.coldwallet)
 
     if not address_out or not _callback:
-        return JsonResponse({'status': 'error', 'error': 'You must provide a valid Bitcoin address and a callback'}, status=400)
+        return JsonResponse({'status': 'error', 'error': 'You must provide a valid address and a callback URL'}, status=400)
 
     try:
         validator = URLValidator()
@@ -46,6 +49,9 @@ def create(_r, coin):
         _request.address_out = pformat(address_dict)
         _request.raw_address_out = address
         _request.notify_pending = notify_pending
+        _request.notify_post = notify_post
+        _request.notify_confirmations = notify_confirmations
+        _request.priority_slug = priority_slug
         _request.extra_fee = extra_fee
         _request.nonce = nonce
 
@@ -61,6 +67,9 @@ def create(_r, coin):
         'callback': build_callback_url(_r, callback_params),
         'token': get_setting('affiliate_token'),
         'pending': int(notify_pending),
+        'post': int(notify_post),
+        'confirmations': notify_confirmations,
+        'priority': priority_slug,
     }
 
     raw_response = process_request(
@@ -127,8 +136,10 @@ def logs(_r, coin):
                 if 'callbacks' in _logs:
                     for c in _logs['callbacks']:
                         c.pop('logs', None)
-                        c['fee_percent'] = Decimal(c['fee_percent']) + _req.extra_fee
-                        c['fee'] = int(c['fee']) + (int((int(c['value']) - int(c['fee'])) * (_req.extra_fee / 100)))
+
+                        if _req.extra_fee > 0:
+                            c['fee_percent'] = Decimal(c['fee_percent']) + _req.extra_fee
+                            c['fee'] = int(c['fee']) + (int((int(c['value']) - int(c['fee'])) * (_req.extra_fee / 100)))
 
                 return JsonResponse(_logs)
 
@@ -173,7 +184,7 @@ def callback(_r, request_id, nonce):
             if not _req.notify_pending and _payment.pending:
                 return HttpResponse('*ok*')
 
-            response = send_callback(_req.callback_url, params)
+            response = send_callback(_req, params)
             return HttpResponse(response)
 
     except Request.DoesNotExist:
